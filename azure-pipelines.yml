@@ -10,29 +10,30 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
+  # Use Node.js
   - task: NodeTool@0
     inputs:
       versionSpec: "20.x"
-    displayName: "Install Node.js"
+    displayName: "Use Node.js 20.x"
 
+  # Install dependencies
   - script: |
       npm install
-    displayName: "npm install"
+    displayName: "Install dependencies"
 
-  - task: CopyFiles@2
-    inputs:
-      Contents: |
-        $(Build.SourcesDirectory)/src/**
-        $(Build.SourcesDirectory)/package*.json
-      TargetFolder: "$(Build.ArtifactStagingDirectory)"
+  # Package the application
   - task: ArchiveFiles@2
     inputs:
-      rootFolderOrFile: "$(Build.ArtifactStagingDirectory)"
+      rootFolderOrFile: "$(Build.SourcesDirectory)"
       includeRootFolder: false
       archiveType: "zip"
-      archiveFile: "$(Build.ArtifactStagingDirectory)/myapp_$(Build.BuildNumber).zip"
+      archiveFile: "$(Build.ArtifactStagingDirectory)/node-express-app_$(Build.BuildNumber).zip"
       replaceExistingArchive: true
+    displayName: "Package application"
+
+  # Publish build artifacts
   - task: PublishBuildArtifacts@1
     inputs:
-      PathtoPublish: $(Build.ArtifactStagingDirectory) # dist or build files
-      ArtifactName: "node-express" # output artifact named www
+      PathtoPublish: "$(Build.ArtifactStagingDirectory)"
+      ArtifactName: "node-express-app"
+    displayName: "Publish build artifacts"
