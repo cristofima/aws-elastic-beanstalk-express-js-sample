@@ -29,6 +29,13 @@ steps:
       archiveType: "zip"
       archiveFile: "$(Build.ArtifactStagingDirectory)/node-express-app_$(Build.BuildNumber).zip"
       replaceExistingArchive: true
+      contents: |
+        **/*
+        !.git/**
+        !.github/**
+        !*.md
+        !LICENSE
+        !azure-pipelines.yml
     displayName: "Package application"
 
   # Publish build artifacts
