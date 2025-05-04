@@ -21,21 +21,28 @@ steps:
       npm install
     displayName: "Install dependencies"
 
-  # Package the application
-  - task: ArchiveFiles@2
+  # Copy only necessary files
+  - task: CopyFiles@2
     inputs:
-      rootFolderOrFile: "$(Build.SourcesDirectory)"
-      includeRootFolder: false
-      archiveType: "zip"
-      archiveFile: "$(Build.ArtifactStagingDirectory)/node-express-app_$(Build.BuildNumber).zip"
-      replaceExistingArchive: true
-      contents: |
+      SourceFolder: "$(Build.SourcesDirectory)"
+      Contents: |
         **/*
         !.git/**
         !.github/**
         !*.md
         !LICENSE
         !azure-pipelines.yml
+      TargetFolder: "$(Build.ArtifactStagingDirectory)/filtered"
+    displayName: "Copy only necessary files"
+
+  # Package filtered files
+  - task: ArchiveFiles@2
+    inputs:
+      rootFolderOrFile: "$(Build.ArtifactStagingDirectory)/filtered"
+      includeRootFolder: false
+      archiveType: "zip"
+      archiveFile: "$(Build.ArtifactStagingDirectory)/node-express-app_$(Build.BuildNumber).zip"
+      replaceExistingArchive: true
     displayName: "Package application"
 
   # Publish build artifacts
