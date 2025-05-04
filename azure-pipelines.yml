@@ -26,6 +26,11 @@ steps:
       npm run build
     displayName: "Build TypeScript project"
 
+  # Copy Procfile to dist folder
+  - script: |
+      cp Procfile dist/
+    displayName: "Copy Procfile to dist folder"
+
   # Package the built application
   - task: ArchiveFiles@2
     inputs:
