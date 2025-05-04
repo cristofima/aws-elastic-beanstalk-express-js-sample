@@ -44,7 +44,6 @@ steps:
         !.gitignore
         !LICENSE
         !azure-pipelines.yml
-        !Procfile
       TargetFolder: "$(Build.ArtifactStagingDirectory)/filtered"
     displayName: "Copy only necessary files"
 
