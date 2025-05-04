@@ -31,15 +31,17 @@ steps:
       npm install
     displayName: "Install dependencies"
 
-   # Copy only necessary files
+  # Copy only necessary files
   - task: CopyFiles@2
     inputs:
       SourceFolder: "$(Build.SourcesDirectory)"
       Contents: |
         **/*
+        !node_modules/**
         !.git/**
         !.github/**
         !*.md
+        !.gitignore
         !LICENSE
         !azure-pipelines.yml
         !Procfile

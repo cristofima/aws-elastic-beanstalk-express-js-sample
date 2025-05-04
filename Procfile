@@ -1,1 +1,1 @@
-web: node app.js
+web: npx ts-node src/app.ts
