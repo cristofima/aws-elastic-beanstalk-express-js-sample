@@ -31,19 +31,19 @@ steps:
       npm install
     displayName: "Install dependencies"
 
+  # Build the application
+  - script: |
+      npm run build
+    displayName: "Build application"
+
   # Copy only necessary files
   - task: CopyFiles@2
     inputs:
       SourceFolder: "$(Build.SourcesDirectory)"
       Contents: |
-        **/*
-        !node_modules/**
-        !.git/**
-        !.github/**
-        !*.md
-        !.gitignore
-        !LICENSE
-        !azure-pipelines.yml
+        package.json
+        Procfile
+        dist/**
       TargetFolder: "$(Build.ArtifactStagingDirectory)/filtered"
     displayName: "Copy only necessary files"
 
