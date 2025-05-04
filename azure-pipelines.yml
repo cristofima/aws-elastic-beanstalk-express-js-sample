@@ -21,20 +21,20 @@ steps:
       npm install
     displayName: "Install dependencies"
 
-  # Build project
+  # Build the TypeScript project
   - script: |
       npm run build
-    displayName: "Build project"
+    displayName: "Build TypeScript project"
 
-  # Package filtered files
+  # Package the built application
   - task: ArchiveFiles@2
     inputs:
-      rootFolderOrFile: "$(Build.ArtifactStagingDirectory)/dist"
+      rootFolderOrFile: "$(Build.SourcesDirectory)/dist"
       includeRootFolder: false
       archiveType: "zip"
       archiveFile: "$(Build.ArtifactStagingDirectory)/node-express-app_$(Build.BuildNumber).zip"
       replaceExistingArchive: true
-    displayName: "Package application"
+    displayName: "Package built application"
 
   # Publish build artifacts
   - task: PublishBuildArtifacts@1
