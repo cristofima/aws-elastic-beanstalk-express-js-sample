@@ -4,7 +4,17 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
 trigger:
-  - main
+  branches:
+    include:
+      - main
+
+  paths:
+    include:
+      - src/
+      - Procfile
+      - package.json
+    exclude:
+      - /*.md
 
 pool:
   vmImage: ubuntu-latest
@@ -21,25 +31,30 @@ steps:
       npm install
     displayName: "Install dependencies"
 
-  # Build the TypeScript project
-  - script: |
-      npm run build
-    displayName: "Build TypeScript project"
+   # Copy only necessary files
+  - task: CopyFiles@2
+    inputs:
+      SourceFolder: "$(Build.SourcesDirectory)"
+      Contents: |
+        **/*
+        !.git/**
+        !.github/**
+        !*.md
+        !LICENSE
+        !azure-pipelines.yml
+        !Procfile
+      TargetFolder: "$(Build.ArtifactStagingDirectory)/filtered"
+    displayName: "Copy only necessary files"
 
-  # Copy Procfile to dist folder
-  - script: |
-      cp Procfile dist/
-    displayName: "Copy Procfile to dist folder"
-
-  # Package the built application
+  # Package filtered files
   - task: ArchiveFiles@2
     inputs:
-      rootFolderOrFile: "$(Build.SourcesDirectory)/dist"
+      rootFolderOrFile: "$(Build.ArtifactStagingDirectory)/filtered"
       includeRootFolder: false
       archiveType: "zip"
       archiveFile: "$(Build.ArtifactStagingDirectory)/node-express-app_$(Build.BuildNumber).zip"
       replaceExistingArchive: true
-    displayName: "Package built application"
+    displayName: "Package application"
 
   # Publish build artifacts
   - task: PublishBuildArtifacts@1
